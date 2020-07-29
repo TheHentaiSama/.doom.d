@@ -60,6 +60,6 @@
  +doom-dashboard-banner-dir (concat (dir!) "/banners/")
 )
 
-(map! :ne "M-/" #'comment-or-uncomment-region)
+(map! :nvi "M-S-/" #'comment-or-uncomment-region)
 
 (windmove-default-keybindings 'meta)
