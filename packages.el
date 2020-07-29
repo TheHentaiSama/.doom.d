@@ -47,3 +47,4 @@
 ;(package! builtin-package :recipe (:branch "develop"))
 
 (package! irony)
+(package! move-text)
