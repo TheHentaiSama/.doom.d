@@ -48,3 +48,4 @@
 
 (package! irony)
 (package! move-text)
+(package! poke-line)

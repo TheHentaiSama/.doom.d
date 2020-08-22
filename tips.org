@@ -1,0 +1,16 @@
+* List of shortcuts I have found
+
+
+| keystrokes    | action                                                                       |
+|---------------+------------------------------------------------------------------------------|
+| */# evil      | Sélectionne toutes les occurences du mot sous le curseur                     |
+| n evil        | Déplace le curseur sur la prochaine occurence                                |
+| N evil        | Déplace le curseur sur l'occurence précédente                                |
+| Select_word R | sélectionne toutes les occurences dans multi edit                            |
+| M-d           | sélectionne le mot sur lequel est le curseur et le suivant dans multi edit   |
+| M-D           | sélectionne le mot sur lequel est le curseur et le précédent dans multi edit |
+| SPC h t       | load-theme affiche la liste des thèmes dispos                                |
+
+* Tips en général
+
++ La variable ~custom-theme-directory~ indique l'emplacement du dossier perso où doom va chercher des fichier .el contenant des thèmes. Ils apparaissent dans la liste de ~load-theme~

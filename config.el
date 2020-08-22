@@ -27,7 +27,7 @@
 ;; There are two ways to load a theme. Both assume the theme is installed and
 ;; available. You can either set `doom-theme' or manually load a theme with the
 ;; `load-theme' function. This is the default:
-(setq doom-theme 'doom-one)
+(setq doom-theme 'doom-vibrant)
 
 ;; If you use `org' and don't want your org files in the default location below,
 ;; change `org-directory'. It must be set before org loads!
@@ -55,11 +55,51 @@
 ;; You can also try 'gd' (or 'C-c g d') to jump to their definition and see how
 ;; they are implemented.
 
+
+;; Defining the place to look for banners
 (setq
- +doom-dashboard-banner-file "pixelmegumin.png"
  +doom-dashboard-banner-dir (concat (dir!) "/banners/")
+ +doom-dashboard-banner-file "pixelmegumin.png"
 )
 
-(map! :nvi "M-S-/" #'comment-or-uncomment-region)
+;; functions used for shortcuts
+
+(defun move-line-up ()
+  "Move up the current line."
+  (interactive)
+  (transpose-lines 1)
+  (forward-line -2)
+  (indent-according-to-mode))
+
+(defun move-line-down ()
+  "Move down the current line."
+  (interactive)
+  (forward-line 1)
+  (transpose-lines 1)
+  (forward-line -1)
+  (indent-according-to-mode))
+
+;; just a few shortcuts
+
+(global-set-key [(control shift up)]  'move-line-up)
+(global-set-key [(control shift down)]  'move-line-down)
+
+
+(map! :nvie "M-S-/" #'comment-or-uncomment-region)
 
 (windmove-default-keybindings 'meta)
+
+;; some config
+
+(setq ibuffer-saved-filter-groups
+              `(("Default"
+                 ;; I create a group call Dired, which contains all buffer in dired-mode
+                 ("Dired" (mode . dired-mode))
+                 ("Temporary" (name . "\*.*\*"))
+                 )))
+
+;; Loading the filters
+(add-hook 'ibuffer-mode-hook
+              (lambda ()
+                (ibuffer-switch-to-saved-filter-groups "Default")))
+
