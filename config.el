@@ -55,6 +55,13 @@
 ;; You can also try 'gd' (or 'C-c g d') to jump to their definition and see how
 ;; they are implemented.
 
+;; Packages
+(use-package poke-line
+  :ensure t
+  :config
+  (poke-line-mode 1)
+  (poke-line-set-pokemon "celebi"))
+
 
 ;; Defining the place to look for banners
 (setq
