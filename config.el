@@ -55,7 +55,11 @@
 ;; You can also try 'gd' (or 'C-c g d') to jump to their definition and see how
 ;; they are implemented.
 
+(setq-default tab-width 4)
+
 ;; Packages
+;; Pokeline <3
+(setq poke-line-minimum-window-width 81)
 (use-package poke-line
   :ensure t
   :config
@@ -110,3 +114,10 @@
               (lambda ()
                 (ibuffer-switch-to-saved-filter-groups "Default")))
 
+;; Enable show paren mode with python
+(add-hook 'after-init-hook 'show-paren-mode)
+(add-hook 'after-init-hook 'flycheck-mode)
+(add-hook 'after-init-hook 'smartparens-mode)
+
+;; Disable confirm kill
+(setq confirm-kill-emacs nil)

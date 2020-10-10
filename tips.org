@@ -10,7 +10,15 @@
 | M-d           | sélectionne le mot sur lequel est le curseur et le suivant dans multi edit   |
 | M-D           | sélectionne le mot sur lequel est le curseur et le précédent dans multi edit |
 | SPC h t       | load-theme affiche la liste des thèmes dispos                                |
+|               |                                                                              |
 
 * Tips en général
 
 + La variable ~custom-theme-directory~ indique l'emplacement du dossier perso où doom va chercher des fichier .el contenant des thèmes. Ils apparaissent dans la liste de ~load-theme~
++ La fonction ~yas-describe-tables~ montre une liste des snippets disponibles pour le mode actuel
+    #+BEGIN_SRC emacs-lisp
+      (yas-describe-tables)
+    #+END_SRC
+
+    #+RESULTS:
+    : #<window 24>
