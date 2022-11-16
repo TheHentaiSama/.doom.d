@@ -46,6 +46,16 @@
 ;; our package manager can't deal with; see raxod502/straight.el#279)
 ;(package! builtin-package :recipe (:branch "develop"))
 
+(package! pyenv)
 (package! irony)
 (package! move-text)
 (package! poke-line)
+(package! bluetooth
+  :recipe (:host github :repo "emacsmirror/bluetooth"))
+(package! sphinx-doc)
+(package! realgud)
+(package! yasnippet-radical-snippets :disable t
+  :recipe (:host github :repo "Xaldew/yasnippet-radical-snippets"
+           :files (:defaults "snippets" "yasnippet-radical-snippets.el")))
+(package! numpydoc)
+(package! org-tree-slide)

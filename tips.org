@@ -1,18 +1,38 @@
-* List of shortcuts I have found
+* Table of content :TOC:
+- [[#emacs-tips][Emacs tips]]
+  - [[#list-of-shortcuts-i-have-found][List of shortcuts I have found]]
+  - [[#tips-en-général][Tips en général]]
+  - [[#org-tree-slide][Org tree slide]]
+  - [[#liens-utiles][Liens utiles]]
+- [[#ssh-tips][SSH tips]]
+- [[#python-tips][Python tips]]
+- [[#fedora-tips][Fedora tips]]
+- [[#audio-on-i3][Audio on I3]]
+- [[#utilitaires-i3][Utilitaires I3]]
+
+* Emacs tips
+** List of shortcuts I have found
 
 
-| keystrokes    | action                                                                       |
-|---------------+------------------------------------------------------------------------------|
-| */# evil      | Sélectionne toutes les occurences du mot sous le curseur                     |
-| n evil        | Déplace le curseur sur la prochaine occurence                                |
-| N evil        | Déplace le curseur sur l'occurence précédente                                |
-| Select_word R | sélectionne toutes les occurences dans multi edit                            |
-| M-d           | sélectionne le mot sur lequel est le curseur et le suivant dans multi edit   |
-| M-D           | sélectionne le mot sur lequel est le curseur et le précédent dans multi edit |
-| SPC h t       | load-theme affiche la liste des thèmes dispos                                |
-|               |                                                                              |
+| keystrokes     | action                                                                         |
+|----------------+--------------------------------------------------------------------------------|
+| */# evil       | Sélectionne toutes les occurences du mot sous le curseur                       |
+| n evil         | Déplace le curseur sur la prochaine occurence                                  |
+| N evil         | Déplace le curseur sur l'occurence précédente                                  |
+| Select_word R  | sélectionne toutes les occurences dans multi edit                              |
+| M-d            | sélectionne le mot sur lequel est le curseur et le suivant dans multi edit     |
+| M-D            | sélectionne le mot sur lequel est le curseur et le précédent dans multi edit   |
+| SPC h t        | load-theme affiche la liste des thèmes dispos                                  |
+| S-k            | Affiche la documention pour le symbole at point (tout langage)                 |
+| g s space      | taper le début de ce qu'on cherche, permet de sauter directement là où on veut |
+| Ctrl-o/ Ctrl-i | recule/avance dans la jumplist. Ctrl-o après un saut fait revenir au départ    |
+| M-Enter        | *Dans org mode* permet d'aller à la ligne et créer un item du même niveau        |
+| C-z            | evil switch entre normal/insert mode                                           |
+| C-x C-+/-      | Zoom in/out. C-+ sans le C-x réinitialise                                      |
+| SPC w =        | Balance windows                                                                |
+|                |                                                                                |
 
-* Tips en général
+** Tips en général
 
 + La variable ~custom-theme-directory~ indique l'emplacement du dossier perso où doom va chercher des fichier .el contenant des thèmes. Ils apparaissent dans la liste de ~load-theme~
 + La fonction ~yas-describe-tables~ montre une liste des snippets disponibles pour le mode actuel
@@ -21,4 +41,58 @@
     #+END_SRC
 
     #+RESULTS:
-    : #<window 24>
+    : #<window 27 on *YASnippet Tables*>
++ Lorsque l'environnement python est changé par pyenv-mode-set, il faut reload lsp avec lsp-workspace-restart (personnal command: switch-venv fait les deux en même temps)
++ Après avoir switché de branche, utiliser ~vc-refresh-state~ pour mettre à jour le version contrôle de la bar
++ Pour vérifier la configuration de flycheck: ~flycheck-verify-setup~ On peut aussi rapidement changer de checker avec ~flycheck-select-checker~
++ Le directory editor actuel est ranger.el : https://github.com/ralesi/ranger.el
++ [[https://github.com/emacsmirror/bluetooth][Bluetooth manager]]
+
+** Org tree slide
+
++ lien: https://github.com/takaxp/org-tree-slide
++ Penser à utiliser ~org-toggle-inline-images~
++
+
+** Liens utiles
+
+ + [[https://zzamboni.org/post/my-doom-emacs-configuration-with-commentary/][une config sympa]]
+ + [[https://tecosaur.github.io/emacs-config/config.html#dashboard-quick-actions][Config de Tecosaur, géniale]]
+
+
+* SSH tips
++ Pour travailler avec plusieurs comptes github:
+  1) Créer la nouvelle clée ssh et lui donner le nom souhaité
+  2) Aller dans ~.git/config~ dans le dossier git souhaité
+  3) Ajouter dans le section =CORE= : =sshCommand = ssh -i pathToPrivateRSA=
+  4) Dans la section =USER= bien mettre l'email du compte associé à cette clée
+  5) Les push et pull se font maintenant avec ce compte et la clée associée !
+
+
+* Python tips
+
++ Pour des jolis plots sur jupyterlab: =pip install ipympl=
+  ajouter la ligne =%matplotlib widget= au début et pouf
+  Sans ipympl, =%matplotlib inline=
+
++ Reload un module :
+  #+BEGIN_SRC python
+import a
+from importlib import reload
+a = reload(a)
+  #+END_SRC
+
+* Fedora tips
++ Dans Nautilus, Ctrl-l permet de passer en mode saisie manuelle du chemin
++ Outils réseaux: nmtui et nm-connection-editor pour éditer la connection
++ =flameshot= pour les screenshot
++ =lutris= can be used to play HoloCure :3 (save at ~/.wine/drive_c/users/gautier/AppData/Local/HoloCure/save.dat)
++ =beets= python pour gérer la bibliothèque de musique et =ytmdl= pour les télécharger sut youtube
+
+* Audio on I3
++ Adding =load-module module-switch-on-connect= to =/etc/pulse/default.pa=
+    Permet le changement automatique de sink quand connecté.
+    Peut être chargé manuellement avec =pacmd load-module module-switch-on-connect=
+
+* Utilitaires I3
++ autorandr pour gérer les écrans automatiquement

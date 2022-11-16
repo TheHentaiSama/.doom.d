@@ -3,7 +3,6 @@
 ;; Place your private configuration here! Remember, you do not need to run 'doom
 ;; sync' after modifying this file!
 
-
 ;; Some functionality uses this to identify you, e.g. GPG configuration, email
 ;; clients, file templates and snippets.
 (setq user-full-name "Gautier Valentin"
@@ -20,8 +19,8 @@
 ;; They all accept either a font-spec, font string ("Input Mono-12"), or xlfd
 ;; font string. You generally only need these two:
 (setq
- doom-font (font-spec :family "Input" :size 16)
- doom-big-font (font-spec :family "Input" :size 32)
+ doom-font (font-spec :family "Hack Nerd Font" :size 16)
+ doom-big-font (font-spec :family "Hack Nerd Font" :size 32)
  )
 
 ;; There are two ways to load a theme. Both assume the theme is installed and
@@ -29,9 +28,17 @@
 ;; `load-theme' function. This is the default:
 (setq doom-theme 'doom-vibrant)
 
+;; ORG ============
+
 ;; If you use `org' and don't want your org files in the default location below,
 ;; change `org-directory'. It must be set before org loads!
 (setq org-directory "~/org/")
+
+;; Hide org markers
+(setq org-hide-emphasis-markers t)
+
+;; ================
+
 
 ;; This determines the style of line numbers in effect. If set to `nil', line
 ;; numbers are disabled. For relative line numbers, set this to `relative'.
@@ -63,15 +70,31 @@
 (use-package poke-line
   :ensure t
   :config
-  (poke-line-mode 1)
+  (poke-line-global-mode 1)
   (poke-line-set-pokemon "celebi"))
 
 
 ;; Defining the place to look for banners
 (setq
  +doom-dashboard-banner-dir (concat (dir!) "/banners/")
- +doom-dashboard-banner-file "pixelmegumin.png"
+ +doom-dashboard-banner-file "doom.png"
 )
+
+;; python
+;; add flake8 checker
+;;(add-hook 'lsp-after-initialize-hook #'my/addpylint)
+;;(defun my/addpylint () (flycheck-add-next-checker 'lsp 'python-flake8 'append))
+
+;; sphinx doc for python
+(add-hook 'python-mode-hook (lambda ()
+                                (require 'sphinx-doc)
+                                (sphinx-doc-mode t)))
+
+;; rainbow delimiters with python
+(add-hook 'python-mode-hook 'rainbow-delimiters-mode)
+
+;; enable type hinting for documentation
+(setq sphinx-doc-include-types t)
 
 ;; functions used for shortcuts
 
@@ -121,3 +144,59 @@
 
 ;; Disable confirm kill
 (setq confirm-kill-emacs nil)
+
+;; add a few keybinds on the dashboard
+(map! :map +doom-dashboard-mode-map
+      :ne "f" #'find-file
+      :ne "r" #'counsel-recentf
+      :ne "p" #'doom/open-private-config
+      :ne "c" (cmd! (find-file (expand-file-name "config.org" doom-private-dir)))
+      :ne "." (cmd! (doom-project-find-file "~/.config/")) ; . for dotfiles
+      :ne "b" #'+ivy/switch-workspace-buffer
+      :ne "B" #'consult-buffer
+      :ne "q" #'save-buffers-kill-terminal)
+
+;; customize imenu with lsp functions
+(setq lsp-imenu-index-function #'lsp-imenu-create-categorized-index)
+
+
+;; keybinding for numpydock
+(map! :map python-mode-map
+      :desc "generate numpy doc"
+      "C-c C-n" #'numpydoc-generate)
+
+;; disable numpydoc prompt
+(setq numpydoc-insertion-style nil)
+(setq numpydoc-template-short "Complete")
+(setq numpydoc-template-long "")
+(setq numpydoc-template-arg-desc "Complete")
+(setq numpydoc-template-type-desc "Complete")
+(setq numpydoc-insert-examples-block nil)
+
+;; ;; define interactive function for switching pyenv
+;; ;; and updating lsp
+;; (defun switch-venv ()
+;;   (interactive)
+;;   (call-interactively #'pyenv-mode-set)
+;;   (call-interactively #'lsp-workspace-restart)
+;;   )
+
+;; Run python does not create a new buffer, starts in current one
+(add-to-list 'display-buffer-alist
+'("^\\*Python\\*$" . (display-buffer-same-window)))
+
+;; config for pyenv
+;; (add-hook 'python-mode-hook #'global-pyenv-mode)
+
+;; Org tree slide
+(add-hook 'org-tree-slide-play-hook
+          (lambda ()
+            (setq-local org-image-actual-width nil)
+            (setq-local display-line-numbers nil))
+          )
+
+(setq auth-sources '("/home/gautier/.emacs.d/.local/state/authinfo.gpg"))
+
+(defun connect-remote ()
+  (interactive)
+  (dired "/ssh:gautier@linux1.dg.creatis.insa-lyon.fr:~/"))
