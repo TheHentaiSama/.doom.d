@@ -4,6 +4,7 @@
   - [[#tips-en-général][Tips en général]]
   - [[#org-tree-slide][Org tree slide]]
   - [[#liens-utiles][Liens utiles]]
+  - [[#pdf][PDF]]
 - [[#ssh-tips][SSH tips]]
 - [[#python-tips][Python tips]]
 - [[#fedora-tips][Fedora tips]]
@@ -26,11 +27,13 @@
 | S-k            | Affiche la documention pour le symbole at point (tout langage)                 |
 | g s space      | taper le début de ce qu'on cherche, permet de sauter directement là où on veut |
 | Ctrl-o/ Ctrl-i | recule/avance dans la jumplist. Ctrl-o après un saut fait revenir au départ    |
-| M-Enter        | *Dans org mode* permet d'aller à la ligne et créer un item du même niveau        |
+| M-Enter        | *Dans org mode* permet d'aller à la ligne et créer un item du même niveau      |
+| Ctrl-Enter     | [org mode] Va à la ligne et créer un nouvel item/TODO                          |
 | C-z            | evil switch entre normal/insert mode                                           |
 | C-x C-+/-      | Zoom in/out. C-+ sans le C-x réinitialise                                      |
 | SPC w =        | Balance windows                                                                |
-|                |                                                                                |
+| SPC c k        | Permet de checker la doc du symbol at point (super avec lsp)                   |
+| g z z          | Créer un curseur et le fige                                                    |
 
 ** Tips en général
 
@@ -58,7 +61,12 @@
 
  + [[https://zzamboni.org/post/my-doom-emacs-configuration-with-commentary/][une config sympa]]
  + [[https://tecosaur.github.io/emacs-config/config.html#dashboard-quick-actions][Config de Tecosaur, géniale]]
+ + [[https://noelwelsh.com/posts/doom-emacs/][Quelques raccourcis utils]]
 
+** PDF
+
++ Utiliser les commandes ~preview_pane~ et ~doc_view~ pour preview le pdf
++ En preview, P pour fit la page, C-J et C-k pour tourner les pages.
 
 * SSH tips
 + Pour travailler avec plusieurs comptes github:
@@ -82,12 +90,15 @@ from importlib import reload
 a = reload(a)
   #+END_SRC
 
++ Pour que pyright marche dans un venv, pip install pyright dans le venv
+
 * Fedora tips
 + Dans Nautilus, Ctrl-l permet de passer en mode saisie manuelle du chemin
 + Outils réseaux: nmtui et nm-connection-editor pour éditer la connection
-+ =flameshot= pour les screenshot
 + =lutris= can be used to play HoloCure :3 (save at ~/.wine/drive_c/users/gautier/AppData/Local/HoloCure/save.dat)
 + =beets= python pour gérer la bibliothèque de musique et =ytmdl= pour les télécharger sut youtube
++ quand crash audio: ~systemctl --user restart pipewire-pulse pipewire~ ça coupe la connection. Il faut ensuite reconnecter le casque
++ Dans i3, pour utiliser gnome-control-center: ~XDG_CURRENT_DESKTOP=GNOME; gnome-control-center~
 
 * Audio on I3
 + Adding =load-module module-switch-on-connect= to =/etc/pulse/default.pa=
@@ -96,3 +107,5 @@ a = reload(a)
 
 * Utilitaires I3
 + autorandr pour gérer les écrans automatiquement
++ pix2tex pour obtenr le code latex d'une formule à partir d'un screen
++ =flameshot= pour les screenshot

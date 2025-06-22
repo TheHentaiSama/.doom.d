@@ -1,0 +1,10 @@
+# -*- mode: snippet -*-
+# name: svg_figure
+# key: svg
+# uuid: svg
+# --
+\begin{figure}[ht]
+  \centering
+  \includesvg[${1:options}]{figures/${2:path.svg}}
+  \caption{\label{fig:${3:label}} $0}
+\end{figure}

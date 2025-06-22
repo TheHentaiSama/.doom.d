@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: red textcolor
+# key: red
+# --
+
+\textcolor{red}{$0}
