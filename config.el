@@ -6,7 +6,7 @@
 ;; Some functionality uses this to identify you, e.g. GPG configuration, email
 ;; clients, file templates and snippets.
 (setq user-full-name "Gautier Valentin"
-      user-mail-address "valentin.gautier@grenoble-inp.org")
+      user-mail-address "valentin.gautier.inp@gmail.com")
 
 ;; Doom exposes five (optional) variables for controlling fonts in Doom. Here
 ;; are the three important ones:
@@ -33,6 +33,8 @@
 ;; If you use `org' and don't want your org files in the default location below,
 ;; change `org-directory'. It must be set before org loads!
 (setq org-directory "~/org/")
+(setq org-agenda-files '("~/org/agenda"))
+
 
 ;; configure org roam
 (after! org
@@ -44,31 +46,6 @@
                 (todo . "%b %i %-12:c")
                 (tags . " %i %-12:c")
                 (search . " %i %-12:c")))
-        ;; My capture templates
-        (setq org-capture-templates
-              '(("t" "Personal todo" entry
-                 (file+headline +org-capture-todo-file "Inbox")
-                 "* TODO %? " :prepend t)
-                ("n" "Personal notes" entry
-                 (file+headline +org-capture-notes-file "Inbox")
-                 "* %u %?\n%i\n%a" :prepend t)
-                ("j" "Journal" entry
-                 (file+olp+datetree +org-capture-journal-file)
-                 "* %U %?\n%i\n%a" :prepend t)
-                ("p" "Templates for projects")
-                ("pt" "Project-local todo" entry
-                 (file+headline +org-capture-project-todo-file "Inbox")
-                 "* TODO %?\n%i\n%a" :prepend t)
-                ("pn" "Project-local notes" entry
-                 (file+headline +org-capture-project-notes-file "Inbox")
-                 "* %U %?\n%i\n%a" :prepend t)
-                ("pc" "Project-local changelog" entry
-                 (file+headline +org-capture-project-changelog-file "Unreleased")
-                 "* %U %?\n%i\n%a" :prepend t)
-                ("o" "Centralized templates for projects")
-                ("ot" "Project todo" entry #'+org-capture-central-project-todo-file "* TODO %?\n %i\n %a" :heading "Tasks" :prepend nil)
-                ("on" "Project notes" entry #'+org-capture-central-project-notes-file "* %U %?\n %i\n %a" :heading "Notes" :prepend t)
-                ("oc" "Project changelog" entry #'+org-capture-central-project-changelog-file "* %U %?\n %i\n %a" :heading "Changelog" :prepend t)))
 )
 
 ;; Config journal
@@ -93,6 +70,33 @@
                 initial-directory
                 extra-rg-args
                 rg-prompt)))
+
+(defun my/insert-image-org-link (img)
+  "Insert an org image link, choosing the file with completion
+and starting from `my-default-image-directory'."
+  (interactive
+   (list (read-file-name "Image: " "~/Pictures/roam images" nil t)))
+  (insert (format "[[file:%s]]" img)))
+
+(defun my/convert-pdf-to-jpg-and-insert (pdf-path)
+  "Convert a PDF file at PDF-PATH to JPG and insert a link to it."
+  (interactive
+   (list (read-file-name "PDF: " "~/Pictures/roam images" nil t nil
+                         (lambda (f) (string-match-p "\\.pdf\\'" f)))))
+  (let* ((output-path (concat (file-name-sans-extension pdf-path) ".jpg"))
+         (cmd (format "convert -density 200 '%s[0]' -quality 100 '%s'"
+                      pdf-path output-path)))
+    (shell-command cmd)
+    (delete-file pdf-path)
+    (insert (format "[[%s]]" (file-relative-name output-path)))))
+
+(map! :map org-mode-map
+      :desc "insert image"
+      "C-c i" #'my/insert-image-org-link)
+
+(map! :map org-mode-map
+      :desc "convert to jpeg and insert image"
+      "C-c I" #'my/convert-pdf-to-jpg-and-insert)
 
 ;; Hide org markers
 ;; (setq org-hide-emphasis-markers t)
@@ -296,3 +300,22 @@ _h_ decrease width    _l_ increase width
 ;;       auth-source-cache-expiry 86400 ; All day, defaut is 2h (7200)
 ;;       password-cache t
 ;;       password-cache-expiry 86400)
+;; (use-package! company-auctex
+;;   :after tex
+;;   :config
+;;   (company-auctex-init))
+
+;; setting backend for company latex
+(after! tex
+        (set-company-backend! 'LaTeX-mode nil)
+        (set-company-backend! 'LaTeX-mode
+          'company-reftex-labels
+          'company-reftex-citations
+          '(company-auctex-macros company-auctex-symbols
+                                              company-auctex-environments)
+          '(:separate company-dabbrev company-yasnippet)
+          'company-auctex-bibs
+          'company-auctex-labels
+          'company-capf
+          )
+)
