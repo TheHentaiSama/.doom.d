@@ -58,3 +58,4 @@
            :files (:defaults "snippets" "yasnippet-radical-snippets.el")))
 (package! numpydoc)
 (package! org-tree-slide)
+(package! pet)

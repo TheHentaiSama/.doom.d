@@ -37,25 +37,37 @@
 
 
 ;; configure org roam
-(after! org
-        (setq org-roam-directory "~/org/roam/")
-        (setq org-roam-index-file "~/org/roam/index.org")
-        (setq org-agenda-prefix-format
-              '((agenda . " %i %-12:c%?-12t% s")
-                ;; This is to show the healine in front of the todo
-                (todo . "%b %i %-12:c")
-                (tags . " %i %-12:c")
-                (search . " %i %-12:c")))
-)
+(use-package! org-roam
+  :init
+  (setq org-roam-directory "~/org/roam/"
+        org-roam-index-file "~/org/roam/index.org"
+        org-roam-dailies-directory "journal/"
+        org-roam-dailies-capture-templates
+        '(("d" "default" entry
+           "* %<%I:%M %p>: %?"
+           :target (file+head "%<%Y-%m-%d>.org"
+                              "#+title: %<%Y-%m-%d>\n")))
+        org-roam-capture-templates
+         '(("d" "default" plain
+            "%?"
+            :if-new (file+head "permanent/%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n")
+            :unnarrowed t)
+           ("i" "inbox" plain
+            "%?"
+            :target (file+head "inbox/%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n")
+            :unnarrowed t))
+         )
+  :config
+  (org-roam-db-autosync-mode))
 
-;; Config journal
-(setq org-roam-dailies-directory "journal/")
-
-(setq org-roam-dailies-capture-templates
-'(("d" "default" entry
-        "* %<%I:%M %p>: %?"
-        :target (file+head "%<%Y-%m-%d>.org"
-                        "#+title: %<%Y-%m-%d>\n"))))
+(use-package! org
+  :config
+  ;; Configure agenda view
+  (setq org-agenda-prefix-format
+        '((agenda . " %i %-12:c%?-12t% s")
+          (todo . "%b %i %-12:c")
+          (tags . " %i %-12:c")
+          (search . " %i %-12:c"))))
 
 ;; counsel-rg (&optional initial-input initial-directory extra-rg-args rg-prompt)
 (defun ugt-counsel-rg ()
@@ -150,16 +162,9 @@ and starting from `my-default-image-directory'."
 ;;(add-hook 'lsp-after-initialize-hook #'my/addpylint)
 ;;(defun my/addpylint () (flycheck-add-next-checker 'lsp 'python-flake8 'append))
 
-;; sphinx doc for python
-(add-hook 'python-mode-hook (lambda ()
-                                (require 'sphinx-doc)
-                                (sphinx-doc-mode t)))
-
 ;; rainbow delimiters with python
 (add-hook 'python-mode-hook 'rainbow-delimiters-mode)
 
-;; enable type hinting for documentation
-(setq sphinx-doc-include-types t)
 
 ;; functions used for shortcuts
 
@@ -319,3 +324,38 @@ _h_ decrease width    _l_ increase width
           'company-capf
           )
 )
+
+(after! company
+  (set-company-backend! 'prog-mode
+    'company-files
+    '(:separate company-capf
+      company-yasnippet)
+    )
+  (set-company-backend! 'text-mode
+    'company-files
+    )
+  )
+
+(use-package! dired
+  :config
+  (map! :map dired-mode-map
+        :desc "dired-do-kill-lines"
+        :n "g K" #'dired-do-kill-lines))
+
+(defun my/evil-toggle ()
+  "Toggle Evil mode."
+  (interactive)
+  (if (bound-and-true-p evil-local-mode)
+      (evil-local-mode -1)
+    (evil-local-mode 1)))
+
+(map! :desc "Toggle Evil mode"
+      "C-c e" #'my/evil-toggle)
+
+(after! evil-escape
+  (setq evil-escape-key-sequence "jk"))
+
+
+(use-package pet
+  :config
+  (add-hook 'python-base-mode-hook 'pet-mode -10))
