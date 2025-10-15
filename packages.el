@@ -59,3 +59,4 @@
 (package! numpydoc)
 (package! org-tree-slide)
 (package! pet)
+(package! rainbow-delimiters)

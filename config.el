@@ -33,7 +33,8 @@
 ;; If you use `org' and don't want your org files in the default location below,
 ;; change `org-directory'. It must be set before org loads!
 (setq org-directory "~/org/")
-(setq org-agenda-files '("~/org/agenda"))
+(setq org-agenda-files '("~/org/agenda"
+                         "~/org/roam/journal"))
 
 
 ;; configure org roam
@@ -44,18 +45,24 @@
         org-roam-dailies-directory "journal/"
         org-roam-dailies-capture-templates
         '(("d" "default" entry
-           "* %<%I:%M %p>: %?"
+           "** %<%H:%M>: %?"
            :target (file+head "%<%Y-%m-%d>.org"
                               "#+title: %<%Y-%m-%d>\n")))
         org-roam-capture-templates
-         '(("d" "default" plain
+         '(
+           ("d" "default" plain
             "%?"
             :if-new (file+head "permanent/%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n")
             :unnarrowed t)
            ("i" "inbox" plain
             "%?"
             :target (file+head "inbox/%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n")
-            :unnarrowed t))
+            :unnarrowed t)
+           ("p" "paper" plain
+            "%?"
+            :target (file+head "paper/%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n")
+            :unnarrowed t)
+           )
          )
   :config
   (org-roam-db-autosync-mode))
@@ -69,19 +76,68 @@
           (tags . " %i %-12:c")
           (search . " %i %-12:c"))))
 
+;;Config biblio
+(defvar citar-indicator-notes-icons
+  (citar-indicator-create
+   :symbol (nerd-icons-mdicon
+            "nf-md-notebook"
+            :face 'nerd-icons-blue
+            :v-adjust -0.3)
+   :function #'citar-has-notes
+   :padding "  "
+   :tag "has:notes"))
+
+(defvar citar-indicator-links-icons
+  (citar-indicator-create
+   :symbol (nerd-icons-octicon
+            "nf-oct-link"
+            :face 'nerd-icons-orange
+            :v-adjust -0.1)
+   :function #'citar-has-links
+   :padding "  "
+   :tag "has:links"))
+
+(defvar citar-indicator-files-icons
+  (citar-indicator-create
+   :symbol (nerd-icons-faicon
+            "nf-fa-file"
+            :face 'nerd-icons-green
+            :v-adjust -0.1)
+   :function #'citar-has-files
+   :padding "  "
+   :tag "has:files"))
+
+(after! citar
+  (setq! citar-bibliography '("~/Documents/bilbio/references.bib")
+         citar-notes-paths '("~/org/roam/paper/")
+         citar-indicators(list citar-indicator-files-icons
+                               citar-indicator-notes-icons
+                               citar-indicator-links-icons)
+         citar-org-roam-subdir "paper"
+         )  
+  )
 ;; counsel-rg (&optional initial-input initial-directory extra-rg-args rg-prompt)
-(defun ugt-counsel-rg ()
-  "Search roam files."
+;; (defun ugt-counsel-rg ()
+;;   "Search roam files."
+;;   (interactive)
+;;   (let ((initial-input "") ;; prefill search with regexp searching for lines starting with `*'
+;;         (initial-directory "~/org/roam") ;; Search in
+;;         ;; Exclude folders `Backups' and `Apps'; show long lines
+;;         (extra-rg-args "-g!#* -g!Backups/* -g!Apps/* --max-columns 600")
+;;         (rg-prompt "rg: Search org roam files (narrow with =S-SPC= or =!keyword=): "))
+;;     (counsel-rg initial-input
+;;                 initial-directory
+;;                 extra-rg-args
+;;                 rg-prompt)))
+
+(defun ugt-consult-rg ()
+  "Search org-roam files using consult-ripgrep."
   (interactive)
-  (let ((initial-input "") ;; prefill search with regexp searching for lines starting with `*'
-        (initial-directory "~/org/roam") ;; Search in
-        ;; Exclude folders `Backups' and `Apps'; show long lines
-        (extra-rg-args "-g!#* -g!Backups/* -g!Apps/* --max-columns 600")
-        (rg-prompt "rg: Search org roam files (narrow with =S-SPC= or =!keyword=): "))
-    (counsel-rg initial-input
-                initial-directory
-                extra-rg-args
-                rg-prompt)))
+  (let* ((default-directory "~/org/roam")
+         (consult-ripgrep-args
+          "rg --null --line-buffered --color=never --max-columns 600 --no-heading --line-number --hidden -g!#* -g!Backups/* -g!Apps/* ."))
+    (consult-ripgrep default-directory)))
+
 
 (defun my/insert-image-org-link (img)
   "Insert an org image link, choosing the file with completion
